@@ -1,0 +1,27 @@
+:root {
+    --card-shadow-light: rgba(0, 0, 0, 0.2);
+    --card-shadow-dark: rgba(0, 0, 0, 0.2);
+    --card-title-color: grey;
+}
+  
+.card {
+    box-shadow: 0 4px 8px 0 var(--card-shadow-light);
+    transition: 0.3s;
+    width: 80%;
+    margin: auto;
+    border-radius: 5px;
+}
+  
+.card:hover {
+    box-shadow: 0 8px 16px 0 var(--card-shadow-dark);
+}
+  
+.card-title {
+    color: var(--card-title-color);
+    font-size: 18px;
+}
+  
+.chart {
+    height: 500px;
+    padding: 20px;
+}  
