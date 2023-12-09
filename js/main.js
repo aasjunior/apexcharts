@@ -22,7 +22,6 @@ var lineSeries = [
     color: '#FEB019'
   }
 ]
-
 var lineCategories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
 
 // Criando os gráficos
@@ -40,15 +39,12 @@ document.addEventListener('click', function(event) {
     const target = event.target;
     if(target.classList.contains('apexcharts-legend-text')){
         const index = parseInt(target.getAttribute('rel'));
-        console.log("click label")
-        console.log(index)
         crossFilterDonut({dataPointIndex: index - 1})
         selectedDonutSeriesIndex = null
     }
 });
 
 function crossFilterDonut(config){
-    console.log(config)
     var formatter = function(w){
         return donutTotal
     }
