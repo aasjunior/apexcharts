@@ -34,7 +34,6 @@ var selectedDonutSeriesIndex = null;
 donutChart.addEventListener('dataPointSelection', function(event, chartContext, config) {
     // Verifique se o mesmo pedaço é clicado novamente
     if(selectedDonutSeriesIndex === config.dataPointIndex && selectedDonutSeriesIndex !== null){
-        console.log("Clicado de novo " + selectedDonutSeriesIndex);
         selectedDonutSeriesIndex = null
         lineChart.updateSeries(lineSeries)
     }else{
@@ -43,7 +42,6 @@ donutChart.addEventListener('dataPointSelection', function(event, chartContext, 
         selectedDonutSeriesIndex = config.dataPointIndex
         var selectedSeriesName = lineSeries[dataPointIndex].name
         var selectedSeries = lineSeries.find(s => s.name === selectedSeriesName)
-        console.log(selectedSeries);
         lineChart.updateSeries([selectedSeries])
     }
 })
