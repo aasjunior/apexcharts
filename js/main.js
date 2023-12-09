@@ -28,7 +28,6 @@ var lineCategories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'S
 // Criando os gráficos
 var donutChart = createDonutChart('myDonutChart', donutSeries, donutLabels, donutColors)
 var lineChart = createLineChart('myLineChart', lineSeries, lineCategories)
-
 var selectedDonutSeriesIndex = null;
 
 // Adicionando manipuladores de eventos aos gráficos
@@ -36,7 +35,20 @@ donutChart.addEventListener('dataPointSelection', function(event, chartContext, 
     crossFilterDonut(config)
 })
 
+// Aplicando o crosFilter ao selecionar a label do grafico donut
+document.addEventListener('click', function(event) {
+    const target = event.target;
+    if(target.classList.contains('apexcharts-legend-text')){
+        const index = parseInt(target.getAttribute('rel'));
+        console.log("click label")
+        console.log(index)
+        crossFilterDonut({dataPointIndex: index - 1})
+        selectedDonutSeriesIndex = null
+    }
+});
+
 function crossFilterDonut(config){
+    console.log(config)
     var formatter = function(w){
         return donutTotal
     }
@@ -61,7 +73,6 @@ function crossFilterDonut(config){
     
     donutChart.updateOptions(plotOptions)
 }
-
 
 const createPlotOptions = (formatter, selectedSeriesName) => ({
     plotOptions: {
