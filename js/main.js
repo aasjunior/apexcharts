@@ -2,6 +2,7 @@
 var donutSeries = [466, 861, 182]
 var donutLabels = ['Bom', 'Mal', 'Sem Resposta']
 var donutColors = ['#008FFB', '#00E396', '#FEB019']
+var donutTotal = donutSeries.reduce((a, b) => a + b, 0)
 
 // Dados estáticos para o gráfico de linha
 var lineSeries = [
@@ -32,16 +33,54 @@ var selectedDonutSeriesIndex = null;
 
 // Adicionando manipuladores de eventos aos gráficos
 donutChart.addEventListener('dataPointSelection', function(event, chartContext, config) {
-    // Verifique se o mesmo pedaço é clicado novamente
+    crossFilterDonut(config)
+})
+
+function crossFilterDonut(config){
+    var formatter = function(w){
+        return donutTotal
+    }
+    var plotOptions = createPlotOptions(formatter,"Total")
+
+    // Verifica se o mesmo pedaço é clicado novamente
     if(selectedDonutSeriesIndex === config.dataPointIndex && selectedDonutSeriesIndex !== null){
         selectedDonutSeriesIndex = null
         lineChart.updateSeries(lineSeries)
+        plotOptions = createPlotOptions(formatter,"Total")
     }else{
         var dataPointIndex = config.dataPointIndex
-        
         selectedDonutSeriesIndex = config.dataPointIndex
         var selectedSeriesName = lineSeries[dataPointIndex].name
         var selectedSeries = lineSeries.find(s => s.name === selectedSeriesName)
         lineChart.updateSeries([selectedSeries])
+        formatter = function (w) {
+            return donutSeries[dataPointIndex]
+        }
+        plotOptions = createPlotOptions(formatter, selectedSeriesName)
+    }
+    
+    donutChart.updateOptions(plotOptions)
+}
+
+
+const createPlotOptions = (formatter, selectedSeriesName) => ({
+    plotOptions: {
+        pie: {
+            donut: {
+                labels: {
+                    show: true,
+                    total: {
+                        show: true,
+                        showAlways: true,
+                        label: selectedSeriesName,
+                        fontSize: '22px',
+                        fontFamily: 'Helvetica, Arial, sans-serif',
+                        fontWeight: 600,
+                        color: '#373d3f',
+                        formatter: formatter
+                    }
+                }
+            }
+        }
     }
 })
