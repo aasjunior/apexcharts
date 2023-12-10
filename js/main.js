@@ -1,114 +1,50 @@
-// Dados estáticos para o gráfico de rosca (donut)
-const donutSeries = [466, 861, 182];
-const donutLabels = ["Bom", "Mal", "Sem Resposta"];
-const donutColors = ["#008FFB", "#00E396", "#FEB019"];
-const donutTotal = donutSeries.reduce((a, b) => a + b, 0);
-
-// Dados estáticos para o gráfico de linha
-const lineSeries = [
-	{
-		name: "Bom",
-		data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
-		color: "#008FFB",
-	},
-	{
-		name: "Mal",
-		data: [20, 29, 37, 36, 44, 45, 50, 58, 63],
-		color: "#00E396",
-	},
-	{
-		name: "Sem Resposta",
-		data: [10, 15, 23, 25, 28, 32, 38, 40, 48],
-		color: "#FEB019",
-	},
-];
-const lineCategories = [
-	"Jan",
-	"Feb",
-	"Mar",
-	"Apr",
-	"May",
-	"Jun",
-	"Jul",
-	"Aug",
-	"Sep",
-];
-
-// Dados estáticos para o gráfico de área spline
-const splineAreaSeries = [
-	{
-		name: "Bom",
-		data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
-		color: "#008FFB",
-	},
-	{
-		name: "Mal",
-		data: [20, 29, 37, 36, 44, 45, 50, 58, 63],
-		color: "#00E396",
-	},
-	{
-		name: "Sem Resposta",
-		data: [10, 15, 23, 25, 28, 32, 38, 40, 48],
-		color: "#FEB019",
-	},
-];
-const splineAreaCategories = [
-	"2023-01-01",
-	"2023-01-02",
-	"2023-01-03",
-	"2023-01-04",
-	"2023-01-05",
-	"2023-01-06",
-	"2023-01-07",
-	"2023-01-08",
-	"2023-01-09",
-	"2023-01-10",
-	"2023-01-11",
-	"2023-01-12",
-	"2023-01-13",
-	"2023-01-14",
-	"2023-01-15",
-	"2023-01-16",
-	"2023-01-17",
-	"2023-01-18",
-	"2023-01-19",
-	"2023-01-20",
-	"2023-01-21",
-	"2023-01-22",
-	"2023-01-23",
-	"2023-01-24",
-	"2023-01-25",
-	"2023-01-26",
-	"2023-01-27",
-	"2023-01-28",
-	"2023-01-29",
-	"2023-01-30",
-	"2023-01-31",
-];
-
-// Criando os gráficos
-const donutChart = createDonutChart(
-	"myDonutChart",
-	donutSeries,
-	donutLabels,
-	donutColors
-);
-const lineChart = createLineChart("myLineChart", lineSeries, lineCategories);
-const splineAreaChart = createSplineAreaChart(
-	"mySplineAreaChart",
-	splineAreaSeries,
-	splineAreaCategories
-);
-
+let donutChart, lineChart, splineAreaChart, donutSeries, donutTotal, lineSeries, splineAreaSeries;
 let selectedDonutSeriesIndex = null;
 
-// Adicionando manipuladores de eventos aos gráficos
-donutChart.addEventListener(
-	"dataPointSelection",
-	function (event, chartContext, config) {
-		crossFilterDonut(config);
-	}
-);
+// Consumindo dados da API para o gráfico de rosca (donut)
+fetch('http://localhost:8000/donut-chart/data')
+    .then(response => response.json())
+    .then(data => {
+        donutSeries = data.donutSeries;
+        donutTotal = donutSeries.reduce((a, b) => a + b, 0);
+        donutChart = createDonutChart(
+            "myDonutChart",
+            donutSeries,
+            data.donutLabels,
+            data.donutColors
+        );
+		// Adicionando manipuladores de eventos aos gráficos
+		donutChart.addEventListener(
+			"dataPointSelection",
+			function (event, chartContext, config) {
+				crossFilterDonut(config);
+			}
+		);
+    });
+
+// Consumindo dados da API para o gráfico de linha
+fetch('http://localhost:8000/line-chart/data')
+    .then(response => response.json())
+    .then(data => {
+        lineSeries = data.lineSeries;
+        lineChart = createLineChart(
+            "myLineChart",
+            lineSeries,
+            data.lineCategories
+        );
+    });
+
+// Consumindo dados da API para o gráfico de área spline
+fetch('http://localhost:8000/spline-chart/data')
+    .then(response => response.json())
+    .then(data => {
+        splineAreaSeries = data.splineAreaSeries;
+        splineAreaChart = createSplineAreaChart(
+            "mySplineAreaChart",
+            splineAreaSeries,
+            data.splineAreaCategories
+        );
+    });
 
 // Aplicando o crosFilter ao selecionar a label do grafico donut
 document.addEventListener("click", function (event) {
